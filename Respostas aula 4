@@ -62,3 +62,7 @@ clr.w, dec.w, decd.w, inc.w e incd.w.
     mov.w R6,6(R9);
     
   (f) A[3] = 2*(f - 2*h);
+    add.w R6,R6;
+    sub.w R4,R6;
+    add.w R6,R6;
+    mov.w R6,6(R9);
