@@ -60,3 +60,5 @@ Considere a variável inteira i, armazenando o valor 0x8051ABCD. Se i é armazen
     
 
 Sabendo que o processador do MSP430 tem registradores de 16 bits, como ele soma duas variáveis de 32 bits?
+Utilizando 4 registradores, salva-se metade do primeiro valor no registrador 1 e a outra metade no registrador 2. Faz-se o 
+mesmo para o segundo valor com os registradores 3 e 4. Por fim, soma-se o registrador 1 com o 3 e o registrador 2 com o 4.
