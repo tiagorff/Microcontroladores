@@ -46,13 +46,54 @@ void main (void)
 
 for(;;)
   {
-  
+  while((P|IN & BTN) != 0){}
+  PIOUT |= LED1+LED2;
+  while((P|IN & BTN) == 0){}
+  PIOUT |= LED1+LED2;
   }
 
-Considerando a placa Launchpad do MSP430, escreva o código em C para piscar duas vezes os dois LEDs sempre que o usuário pressionar o botão.
+Considerando a placa Launchpad do MSP430, escreva o código em C para piscar duas vezes os dois LEDs sempre que o usuário pressionar 
+o botão.
+
+#include <msp430g2553.h>
+#define LED1 BIT1
+#define LED2 BIT2
+
+void main (void)
+{
+  WDTCTL = WDTPW|WDTHOLD;
+  PIDIR = BIT1 + BIT2;
+  POUT = 0;
+}
+
+for(;;)
+  {
+  while((P|IN & BTN) != 0){}
+  PIOUT |= LED1+LED2;
+  PIOUT &= ~(LED1+LED2);
+  PIOUT |= LED1+LED2;
+  PIOUT &= ~(LED1+LED2);
+  }
 
 Considerando a placa Launchpad do MSP430, faça uma função em C que pisca os dois LEDs uma vez.
 
+#include <msp430g2553.h>
+#define LED1 BIT1
+#define LED2 BIT2
+
+void main (void)
+{
+  WDTCTL = WDTPW|WDTHOLD;
+  PIDIR = BIT1 + BIT2;
+  POUT = 0;
+}
+
+for(;;)
+  {
+  while((P|IN & BTN) != 0){}
+  PIOUT |= LED1+LED2;
+  PIOUT &= ~(LED1+LED2);
+  }
 Reescreva o código da questão 2 usando a função da questão 4.
 
 Reescreva o código da questão 3 usando a função da questão 4.
