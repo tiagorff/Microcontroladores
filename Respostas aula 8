@@ -1,0 +1,90 @@
+Para todas as questões, utilize os LEDs e/ou os botões da placa Launchpad do MSP430.
+
+1. Escreva um código em C que pisca os LEDs ininterruptamente.
+
+void main(void){
+
+    WDTCTL = WDTPW | WDTHOLD;
+    P1OUT = 0x00;
+    P1DIR = LED1 | LED2; //P1DIR = 1000 0001;
+
+	for(;;){
+		P1OUT ^= BIT0 | BIT6;
+		__delay_cycles(10000);
+	}
+}
+
+2. Escreva um código em C que pisca os LEDs ininterruptamente. No ciclo que pisca os LEDs, o tempo que os LEDs ficam ligados deve ser 
+duas vezes maior do que o tempo que eles ficam desligados.
+
+void main(void){
+
+    WDTCTL = WDTPW | WDTHOLD;
+    P1OUT = 0x00;
+    P1DIR = BIT0|BIT6; //P1DIR = 1000 0001
+
+    for(;;){
+
+        P1OUT ^= BIT0 | BIT6;
+        __delay_cycles(100000);
+        if(P1OUT == (BIT0|BIT6))
+         __delay_cycles(100000);
+    }
+}
+3. Escreva um código em C que acende os LEDs quando o botão é pressionado.
+
+void main(void){
+
+    WDTCTL = WDTPW | WDTHOLD;
+    P1OUT = 0x00;
+    P1DIR = BIT0|BIT6; //P1DIR = 1000 0001
+    P1REN |= BIT3; // P1REN = 0000 1000 (BOTÃO)  //Ligar o resistor conectado ao pino 3.
+    P1OUT |= BIT3; // P1OUT = 0000 1000 (resistor de pullup).
+
+for(;;){
+    while((P1IN & BIT3) == 0){
+        P1OUT |= BIT0 | BIT6;
+    }
+        P1OUT &= ~(BIT0 | BIT6);
+}
+}
+
+4. Escreva um código em C que pisca os LEDs ininterruptamente somente se o botão for pressionado.
+void main(void){
+
+    WDTCTL = WDTPW | WDTHOLD;
+    P1OUT = 0x00;
+    P1DIR = BIT0|BIT6; //P1DIR = 1000 0001
+    P1REN |= BIT3; // P1REN = 0000 1000 (BOTÃO)  //Ligar o resistor conectado ao pino 3.
+    P1OUT |= BIT3; // P1OUT = 0000 1000 (resistor de pullup).
+
+for(;;){
+    while((P1IN & BIT3) == 0){
+        P1OUT ^= BIT0 | BIT6;
+        __delay_cycles(500000);
+    }
+        P1OUT &= ~(BIT0 | BIT6);
+}
+}
+
+
+5. Escreva um código em C que acende os LEDs quando o botão é pressionado. Deixe o MSP430 em modo de baixo consumo, e habilite a 
+interrupção do botão.
+
+void main(void){
+
+    WDTCTL = WDTPW | WDTHOLD;
+    P1OUT = 0x00;
+    P1DIR = BIT0|BIT6; //P1DIR = 1000 0001
+    P1REN |= BIT3; // P1REN = 0000 1000 (BOTÃO)  //Ligar o resistor conectado ao pino 3.
+    P1OUT |= BIT3; // P1OUT = 0000 1000 (resistor de pullup).
+    P1IE = 1;
+    P1IES = BIT3;
+    __bic_SR_register(GIE + LPM4_bits);
+
+}
+#pragma vector=PORT1_VECTOR
+__interrupt Port_1(void){
+    P1OUT ^= BIT0 | BIT6;
+    __delay_cycles(500000);
+}
